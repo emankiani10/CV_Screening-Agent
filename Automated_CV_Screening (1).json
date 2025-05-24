@@ -1,0 +1,346 @@
+{
+  "name": "Automated_CV_Screening",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $('Application Form1').item.json['E-mail'] }}",
+        "subject": "We Have Received Your CV",
+        "message": "=Dear {{ $('Application Form1').item.json['Full Name'] }}, \n\nThank you for submitting your CV. We have received it and will review it shortly.  \n\nBest regards,\nMediusware",
+        "options": {}
+      },
+      "id": "4a1ff579-8a29-4a1f-ac45-1620788f91b6",
+      "name": "Confirmation of CV Submission1",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        80,
+        180
+      ],
+      "webhookId": "954756dc-2946-4b78-b208-06f3df612ab5",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XsHbYhgQi7W2eVMA",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=emankainif23@nutech.edu.pk",
+        "subject": "New Candidate CV Awaiting Review",
+        "message": "=Hello HR,\n\nA new CV has been successfully received in our system. Please review the candidate's details at your earliest convenience.\n\nCandidate Name: {{ $('Application Form1').item.json['Full Name'] }}\nCandidate E-mail: {{ $('Application Form1').item.json['E-mail'] }}\nCandidate Linkedin: {{ $('Application Form1').item.json.Linkedin }}\nCandidate Expectation: {{ $('Application Form1').item.json.Expectation }}\nCandidate AI Rating: {{ $('Using AI Analysis & Rating1').item.json.text }}\n\nThank you for your attention.\n\nBest regards,\nAutomated CV Screening",
+        "options": {}
+      },
+      "id": "4da8e759-30eb-4cd0-a4ad-c44e7b0218ce",
+      "name": "Inform HR New CV Received1",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        -80,
+        180
+      ],
+      "webhookId": "e969a9f5-631b-4719-a4f6-87e6063cef6a",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XsHbYhgQi7W2eVMA",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Rule 1 :  Do not exceed  maximum of 75 words. As an AI with advanced capabilities in talent acquisition and human resources, your task is to conduct a thorough and intricate analysis of a candidate's resume or CV against a specific job description. You will assist hiring professionals in discerning the alignment between the candidate's skills, experience, qualifications, and the requirements of the job. Your expert insights will equip employers with a lucid understanding of the candidate's suitability for the role. Very important for you to write output text in ${output_language} language. It's VERY IMPORTANT for me for text be in ${output_language} or I will be fired. Your analysis should follow this structured format: 1. **Compatibility Rating**: Propose an overall compatibility rating on a scale from 1 (not compatible) to 10 (perfect fit). Support your rating by elucidating the rationale behind it. 2. **Recommendation**: Informed by your analysis and compatibility rating, offer a recommendation on whether the employer should consider this candidate for an interview. Furnish a well-argued explanation for your recommendation. Remember, your analysis should be comprehensive, professional, and actionable. It should equip an employer with a vivid understanding of the candidate's suitability for the role. This isn't merely about ticking off boxes; it's about illustrating a comprehensive picture of how well the candidate might fit into the role and complement the existing team. Here is your task: Analyze the compatibility of the following candidate's resume with the provided job description. Endeavor to apply your deep understanding of talent evaluation to provide the most insightful analysis. Job description: \"Software Engineer\" Resume: ${resume}\nNo Markdown Please, only plain text. Please no double '**'   "
+            }
+          ]
+        }
+      },
+      "id": "4b46514c-bd44-41b0-bc60-0d1f1c9ee64e",
+      "name": "Using AI Analysis & Rating1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        -560,
+        180
+      ],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Your_Resume_CV",
+        "options": {}
+      },
+      "id": "1bc2d9b2-4b17-496f-abf4-c682f5512abc",
+      "name": "Convert Binary to Json1",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        -720,
+        180
+      ],
+      "retryOnFail": false,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "formTitle": "Application for Software Engineer Position",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "E-mail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Expectation",
+              "placeholder": "2000-3000$",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Linkedin",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your Resume/CV",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1470905c-61c4-4158-9f67-58d3256e69bb",
+      "name": "Application Form1",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -900,
+        180
+      ],
+      "webhookId": "5128d7d4-1961-4e97-a577-fe3fd3dbb2da",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1X23xhYEIdywlAATJmvr7_hFwAbMsNGpP_EYNP6Q2pQE",
+          "mode": "list",
+          "cachedResultName": "eman",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X23xhYEIdywlAATJmvr7_hFwAbMsNGpP_EYNP6Q2pQE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X23xhYEIdywlAATJmvr7_hFwAbMsNGpP_EYNP6Q2pQE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CV": "={{ $('Application Form1').item.json['Your Resume/CV'][0].filename }}",
+            "E-mail": "={{ $('Application Form1').item.json['E-mail'] }}",
+            "Linkedin": "={{ $('Application Form1').item.json.Linkedin }}",
+            "Expectation": "={{ $('Application Form1').item.json.Expectation }}",
+            "Applicant name": "={{ $('Application Form1').item.json['Full Name'] }}",
+            "Comments": "={{ $json.text }}",
+            "Date": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "CV",
+              "displayName": "CV",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Applicant name",
+              "displayName": "Applicant name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expectation",
+              "displayName": "Expectation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comments",
+              "displayName": "Comments",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ab8d04f7-3864-42a6-9a2a-d862f864e8e0",
+      "name": "Candidate Lists1",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -240,
+        180
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5rgMq349PR1OnMMl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        380
+      ],
+      "id": "880015a7-80dd-4eb7-9f53-86a3abe6db1e",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "IV8rBZAZ5b3yWWU8",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Inform HR New CV Received1": {
+      "main": [
+        [
+          {
+            "node": "Confirmation of CV Submission1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Using AI Analysis & Rating1": {
+      "main": [
+        [
+          {
+            "node": "Candidate Lists1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Binary to Json1": {
+      "main": [
+        [
+          {
+            "node": "Using AI Analysis & Rating1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Form1": {
+      "main": [
+        [
+          {
+            "node": "Convert Binary to Json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Candidate Lists1": {
+      "main": [
+        [
+          {
+            "node": "Inform HR New CV Received1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Using AI Analysis & Rating1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ba442649-d658-44bc-8f8c-0451d2122ede",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f45e2a99226774c4ece917cbb24ea52344c21f3d556e1e4f12308d728145736e"
+  },
+  "id": "9E4rMTHLt8MUyw3s",
+  "tags": []
+}
